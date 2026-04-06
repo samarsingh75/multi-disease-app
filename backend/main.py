@@ -1,40 +1,44 @@
 from fastapi import FastAPI
 import joblib
 import pandas as pd
-from tensorflow.keras.models import load_model
+import os
 
 app = FastAPI()
+
+# =========================
+# BASE PATH (VERY IMPORTANT)
+# =========================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # =========================
 # LOAD MODELS
 # =========================
 models = {
-    "diabetes": joblib.load("models/diabetes_model.pkl"),
-    "heart": load_model("models/heart_ann_model.h5"),
-    "kidney": joblib.load("models/kidney_model.pkl"),
-    "alzheimer": joblib.load("models/alzheimer_model.pkl")
+    "diabetes": joblib.load(os.path.join(BASE_DIR, "models/diabetes_model.pkl")),
+    "heart": joblib.load(os.path.join(BASE_DIR, "models/heart_model.pkl")),
+    "kidney": joblib.load(os.path.join(BASE_DIR, "models/kidney_model.pkl")),
+    "alzheimer": joblib.load(os.path.join(BASE_DIR, "models/alzheimer_model.pkl"))
 }
 
 # =========================
 # LOAD SCALERS & IMPUTERS
 # =========================
 scalers = {
-    "heart": joblib.load("models/heart_scaler.pkl"),
-    "kidney": joblib.load("models/kidney_scaler.pkl")
+    "kidney": joblib.load(os.path.join(BASE_DIR, "models/kidney_scaler.pkl"))
 }
 
 imputers = {
-    "kidney": joblib.load("models/kidney_imputer.pkl")
+    "kidney": joblib.load(os.path.join(BASE_DIR, "models/kidney_imputer.pkl"))
 }
 
 # =========================
 # LOAD ACCURACY
 # =========================
 accuracies = {
-    "diabetes": joblib.load("models/diabetes_accuracy.pkl"),
-    "heart": joblib.load("models/heart_accuracy.pkl"),
-    "kidney": joblib.load("models/kidney_accuracy.pkl"),
-    "alzheimer": joblib.load("models/alzheimer_accuracy.pkl")
+    "diabetes": joblib.load(os.path.join(BASE_DIR, "models/diabetes_accuracy.pkl")),
+    "heart": joblib.load(os.path.join(BASE_DIR, "models/heart_accuracy.pkl")),
+    "kidney": joblib.load(os.path.join(BASE_DIR, "models/kidney_accuracy.pkl")),
+    "alzheimer": joblib.load(os.path.join(BASE_DIR, "models/alzheimer_accuracy.pkl"))
 }
 
 # =========================
@@ -92,26 +96,15 @@ def predict(disease: str, data: dict):
     columns = columns_map[disease]
     input_df = pd.DataFrame([list(data.values())], columns=columns)
 
-    # DIABETES
-    if disease == "diabetes":
-        model = models[disease]
+    model = models[disease]
+
+    # DIABETES / HEART / ALZHEIMER
+    if disease in ["diabetes", "heart", "alzheimer"]:
         prediction = model.predict(input_df)[0]
         probability = model.predict_proba(input_df)[0][1]
 
-    # HEART (ANN)
-    elif disease == "heart":
-        model = models[disease]
-        scaler = scalers["heart"]
-
-        input_scaled = scaler.transform(input_df)
-        prob = model.predict(input_scaled)[0][0]
-
-        probability = float(prob)
-        prediction = 1 if prob > 0.5 else 0
-
     # KIDNEY
     elif disease == "kidney":
-        model = models[disease]
         scaler = scalers["kidney"]
         imputer = imputers["kidney"]
 
@@ -120,12 +113,6 @@ def predict(disease: str, data: dict):
 
         prediction = model.predict(input_scaled)[0]
         probability = model.predict_proba(input_scaled)[0][1]
-
-    # ALZHEIMER
-    elif disease == "alzheimer":
-        model = models[disease]
-        prediction = model.predict(input_df)[0]
-        probability = model.predict_proba(input_df)[0][1]
 
     # =========================
     # RISK LEVEL
