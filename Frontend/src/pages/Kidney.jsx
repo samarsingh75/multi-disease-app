@@ -4,7 +4,7 @@ import PageLayout from "../components/PageLayout";
 import InputField from "../components/InputField";
 import ResultCard from "../components/ResultCard";
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "https://multi-disease-api-cg2f.onrender.com";
 
 const INITIAL = {
   age: "",
