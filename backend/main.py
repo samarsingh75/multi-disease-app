@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from datetime import datetime
 
+
 app = FastAPI()
 client = MongoClient("mongodb://localhost:27017/")
 db = client["multi_disease_db"]
@@ -13,10 +14,7 @@ predictions = db["predictions"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-    "http://localhost:3000",
-    "http://127.0.0.1:3000"
-],  # allow all (for now)
+    allow_origins=["*"],   # 🔥 FIX
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
