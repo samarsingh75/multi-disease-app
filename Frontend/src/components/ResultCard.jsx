@@ -78,7 +78,7 @@ export default function ResultCard({ riskLevel, probability, accuracy }) {
   }, []);
 
   const probPercent = Math.round((probability || 0) * 100);
-  const accPercent = Math.round((accuracy || 0) * 100);
+  const accPercent = Math.round((accuracy || 0));
 
   return (
     <div

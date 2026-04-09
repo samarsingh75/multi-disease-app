@@ -3,8 +3,14 @@ import joblib
 import pandas as pd
 import os
 from fastapi.middleware.cors import CORSMiddleware
+from pymongo import MongoClient
+from datetime import datetime
 
 app = FastAPI()
+client = MongoClient("mongodb://localhost:27017/")
+db = client["multi_disease_db"]
+predictions = db["predictions"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -108,12 +114,10 @@ def predict(disease: str, data: dict):
 
     model = models[disease]
 
-    # DIABETES / HEART / ALZHEIMER
     if disease in ["diabetes", "heart", "alzheimer"]:
         prediction = model.predict(input_df)[0]
         probability = model.predict_proba(input_df)[0][1]
 
-    # KIDNEY
     elif disease == "kidney":
         scaler = scalers["kidney"]
         imputer = imputers["kidney"]
@@ -124,9 +128,21 @@ def predict(disease: str, data: dict):
         prediction = model.predict(input_scaled)[0]
         probability = model.predict_proba(input_scaled)[0][1]
 
-    # =========================
-    # RISK LEVEL
-    # =========================
+    # ✅ MOVE THIS INSIDE FUNCTION
+    record = {
+        "disease": disease,
+        "input": data,
+        "prediction": int(prediction),
+        "probability": float(probability),
+        "timestamp": datetime.utcnow()
+    }
+
+    try:
+        predictions.insert_one(record)
+    except Exception as e:
+        print("MongoDB Error:", e)
+
+    # ✅ RESPONSE
     if probability < 0.3:
         level = "Low"
     elif probability < 0.7:
