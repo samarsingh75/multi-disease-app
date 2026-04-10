@@ -35,7 +35,7 @@ const Icon = (
 
 function SectionLabel({ text }) {
   return (
-    <div className="flex items-center gap-3 col-span-2">
+ <div className="flex items-center gap-3 col-span-2 my-2">
       <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.05)" }} />
       <span className="text-[10px] font-mono tracking-[0.18em] uppercase text-slate-700">{text}</span>
       <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.05)" }} />
@@ -48,7 +48,7 @@ function MMSEIndicator({ value }) {
   const pct = value ? Math.min(Math.max(parseFloat(value), 0), 30) / 30 * 100 : 0;
   const color = pct > 80 ? "#10b981" : pct > 50 ? "#f59e0b" : "#ef4444";
   return (
-    <div className="col-span-2 rounded-xl p-3 flex items-center gap-4"
+    <div className="col-span-2 rounded-xl p-3 flex items-center gap-4 mt-2 mb-2"
       style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.08)" }}>
       <span className="text-[10px] font-mono text-slate-700 tracking-widest uppercase whitespace-nowrap">MMSE Level</span>
       <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
@@ -109,11 +109,11 @@ const payload = {
         </div>
 
         <div className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <SectionLabel text="Demographic & Cognitive Scores" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <SectionLabel text="Demographic & Cognitive Scores" className="mt-3" />
             {FIELDS.slice(0, 4).map(f => <InputField key={f.name} {...f} type="number" value={form[f.name]} onChange={handleChange} />)}
             <MMSEIndicator value={form.mmse} />
-            <SectionLabel text="Neuroimaging Markers" />
+            <SectionLabel text="Neuroimaging Markers" className="mt-3"  />
             {FIELDS.slice(4).map(f => <InputField key={f.name} {...f} type="number" value={form[f.name]} onChange={handleChange} />)}
           </div>
 

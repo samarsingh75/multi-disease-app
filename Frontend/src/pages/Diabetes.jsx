@@ -49,7 +49,7 @@ const Icon = (
 /* Section divider with label */
 function SectionLabel({ text }) {
   return (
-    <div className="flex items-center gap-3 col-span-2">
+  <div className="flex items-center gap-3 col-span-2 my-2">
       <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.05)" }} />
       <span className="text-[10px] font-mono tracking-[0.18em] uppercase text-slate-700">{text}</span>
       <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.05)" }} />
@@ -112,12 +112,12 @@ export default function Diabetes() {
 
         {/* Inputs */}
         <div className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <SectionLabel text="Obstetric & Metabolic" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <SectionLabel text="Obstetric & Metabolic" className="mt-3" />
             {FIELDS.slice(0, 4).map(f => (
               <InputField key={f.name} {...f} type="number" value={form[f.name]} onChange={handleChange} />
             ))}
-            <SectionLabel text="Body Composition & History" />
+            <SectionLabel text="Body Composition & History" className="mt-3"  />
             {FIELDS.slice(4).map(f => (
               <InputField key={f.name} {...f} type="number" value={form[f.name]} onChange={handleChange} />
             ))}

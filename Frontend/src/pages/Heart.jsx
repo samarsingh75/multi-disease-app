@@ -61,9 +61,9 @@ function ECGStrip() {
   );
 }
 
-function SectionLabel({ text }) {
+function SectionLabel({ text, className = "" }) {
   return (
-    <div className="flex items-center gap-3 col-span-2">
+    <div className={`flex items-center gap-3 col-span-2 my-2 ${className}`}>
       <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.05)" }} />
       <span className="text-[10px] font-mono tracking-[0.18em] uppercase text-slate-700">{text}</span>
       <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.05)" }} />
@@ -123,13 +123,13 @@ const handleSubmit = () => {
         </div>
 
         <div className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <SectionLabel text="Patient Demographics" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <SectionLabel text="Patient Demographics" className="mt-3" />
             {FIELDS.slice(0, 3).map(f => <InputField key={f.name} {...f} type="number" value={form[f.name]} onChange={handleChange} />)}
-            <SectionLabel text="Hemodynamic Markers" />
+            <SectionLabel text="Hemodynamic Markers" className="mt-3" />
             {FIELDS.slice(3, 7).map(f => <InputField key={f.name} {...f} type="number" value={form[f.name]} onChange={handleChange} />)}
             <ECGStrip />
-            <SectionLabel text="Exercise & Imaging Data" />
+            <SectionLabel text="Exercise & Imaging Data" className="mt-3" />
             {FIELDS.slice(7).map(f => <InputField key={f.name} {...f} type="number" value={form[f.name]} onChange={handleChange} />)}
           </div>
 
